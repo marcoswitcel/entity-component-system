@@ -9,9 +9,9 @@ function clearScreen() {
     ctx.fill();
 }
 
-function drawCircle(x, y) {
+function drawCircle(x, y, radius, color) {
     ctx.beginPath();
-    ctx.arc(x, y, 50, 0, 2 * Math.PI);
-    ctx.fillStyle ='red';
+    ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    ctx.fillStyle = color;
     ctx.fill();
 }

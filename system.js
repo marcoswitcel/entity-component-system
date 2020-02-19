@@ -12,14 +12,35 @@ component.getByName = function componentGetByName(componentName) {
     return component.registeredComponent[componentName] || null
 }
 
+component('gravity', {
+    x : 0,
+    y : -0.7,
+})
+
+component('renderable', {
+    canRender: true
+})
+
+component('shape-circle', {
+    type: 'circle',
+    radius: 15,
+    color: 'blue',
+})
+
+component('shape-circle02', {
+    type: 'circle',
+    radius: 30,
+    color: 'red',
+})
+
 component('moveable', {
-    dx: 1,
-    dy: 1,
+    dx: 9,
+    dy: 27,
 })
 
 component('position', {
-    x : 0,
-    y:  0,
+    x : 100,
+    y:  100,
 })
 
 function entity({ components }) {
@@ -36,28 +57,97 @@ function entity({ components }) {
     return entity;
 }
 
-const entity01 = entity({ components : ['moveable', 'position'] });
-const entity02 = entity({ components : ['moveable', 'position'] });
+function entityWithComponent(...names) {
+    return world.entities
+        .filter(entity => {
+            for (let name of names) {
+                if (!entity.components.includes(name)) {
+                    return false;
+                }
+            }
+            return true;
+        })
+}
+
+function hasComponent(entity, name) {
+    return entity.components.includes(name)
+}
+
+function collisionSystem(world) {
+    const CANVAS_WIDTH = 900;
+    const CANVAS_HEIGHT = 600;
+
+    for (let entity of entityWithComponent('position', 'moveable')) {
+        if (hasComponent(entity, 'shape-circle') || hasComponent(entity, 'shape-circle02')) {
+            let { x, y } = entity.componentsState['position'];
+            // Referência do componente de movimento de uma dada entidade
+            let moveable = entity.componentsState['moveable'];
+
+            let { radius } = entity.componentsState['shape-circle'] || entity.componentsState['shape-circle02'];
+    
+            if (y + radius > CANVAS_HEIGHT || y - radius < 0) {
+                moveable.dy *= -.9;
+            }
+            if (x + radius > CANVAS_WIDTH || x - radius < 0) {
+                moveable.dx *= -.9;
+            }
+        }
+    }
+}
+
+function gravitySystem(world) {
+    for (let entity of entityWithComponent('gravity', 'moveable')) {
+        let moveable = entity.componentsState['moveable'];
+        let { x, y } = entity.componentsState['gravity'];
+        
+        moveable.dx += x;
+        moveable.dy -= y;
+    }
+}
 
 function movementSystem(world) {
-    for (let entity of world.entities) {
+    for (let entity of entityWithComponent('position', 'moveable')) {
         entity.componentsState['position'].x += entity.componentsState['moveable'].dx
         entity.componentsState['position'].y += entity.componentsState['moveable'].dy
     }
 }
 function renderSystem(world) {
     clearScreen();
-    for (let entity of world.entities) {
-        drawCircle(
-            entity.componentsState['position'].x,
-            entity.componentsState['position'].y 
-        )
+    for (let entity of entityWithComponent('renderable', 'position')) {
+        if (entity.componentsState.renderable.canRender) {
+            if (hasComponent(entity, 'shape-circle')) {
+                drawCircle(
+                    entity.componentsState['position'].x,
+                    entity.componentsState['position'].y,
+                    entity.componentsState['shape-circle'].radius,
+                    entity.componentsState['shape-circle'].color,
+                )
+            }
+            if (hasComponent(entity, 'shape-circle02')) {
+                drawCircle(
+                    entity.componentsState['position'].x,
+                    entity.componentsState['position'].y,
+                    entity.componentsState['shape-circle02'].radius,
+                    entity.componentsState['shape-circle02'].color,
+                )
+            }
+        }
     }
 }
 
+setInterval(function() {
+    const components = ['moveable', 'position', 'renderable', Math.round(Math.random()) ? 'shape-circle' : 'shape-circle02' ];
+    if (Math.round(Math.random())) {
+        components.push('gravity');
+    }
+    const entityInstance = entity({ components : components });
+
+    world.entities.push(entityInstance);
+} ,2000);
+
 const world = {
-    entities: [ entity01 ],
-    systems : [ movementSystem, renderSystem ],
+    entities: [ ],
+    systems : [ gravitySystem, movementSystem, collisionSystem, renderSystem ],
 }
 
 function updateWorld(world) {
