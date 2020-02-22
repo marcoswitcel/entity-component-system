@@ -25,11 +25,15 @@ component('velocity', {
 })
 
 component('acceleration', {
-    ax: 0.001,
-    ay: 0.001,
+    ax: 0,
+    ay: 0,
 })
 
 component('position', {
     x : 100,
     y:  100,
+})
+
+component('input-control', {
+    
 })

@@ -50,12 +50,14 @@ function gravitySystem(world) {
 
 function movementSystem(world) {
     for (let entity of entityWithComponent('position', 'velocity')) {
+        let velocity = entity.componentsState['velocity'];
+        let acceleration =  entity.componentsState['acceleration']
+        let position = entity.componentsState['position'];
         // Computando velocidade
         if (hasComponent(entity, 'acceleration')) {
-            let velocity = entity.componentsState['velocity'];
 
-            velocity.dx += entity.componentsState['acceleration'].ax
-            velocity.dy += entity.componentsState['acceleration'].ay
+            velocity.dx += acceleration.ax
+            velocity.dy += acceleration.ay
 
             // Limitando velocidade
             if (Math.abs(velocity.dx) > 10) {
@@ -66,8 +68,10 @@ function movementSystem(world) {
             }
         }
         // Computando posição
-        entity.componentsState['position'].x += entity.componentsState['velocity'].dx
-        entity.componentsState['position'].y += entity.componentsState['velocity'].dy
+        velocity.dx *= .99;
+        velocity.dy *= .99;
+        position.x += velocity.dx
+        position.y += velocity.dy
     }
 }
 
@@ -92,5 +96,36 @@ function renderSystem(world) {
                 )
             }
         }
+    }
+}
+
+Input.setKeyIsPressedListenner('u');
+Input.setKeyIsPressedListenner('j');
+Input.setKeyIsPressedListenner('h');
+Input.setKeyIsPressedListenner('k');
+
+function controlsSystem(wolrd) {
+    for (let entity of entityWithComponent('input-control', 'acceleration')) {
+        let acceleration = entity.componentsState['acceleration']
+        let force = { x : 0, y : 0 }
+
+        if (Input.areBothKeysPressed('u', 'j')) {
+            // Faz na por hora
+        } else if (Input.isKeyPressed('u')) {
+            force.y = -0.09;
+        } else if (Input.isKeyPressed('j')) {
+            force.y = 0.09;
+        }
+        if ( Input.areBothKeysPressed('h', 'k') ) {
+            // Faz na por hora
+        } else if (Input.isKeyPressed('h')) {
+            force.x = -0.09;
+        } else if (Input.isKeyPressed('k')) {
+            force.x = 0.09;
+        }
+
+        
+        acceleration.ax = force.x;
+        acceleration.ay = force.y;
     }
 }
