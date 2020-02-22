@@ -17,8 +17,7 @@ function collisionSystem(world) {
             let { radius } = entity.componentsState['shape-circle'] || entity.componentsState['shape-circle02'];
     
             if (yPos + radius > CANVAS_HEIGHT || yPos - radius < 0) {
-                acceleration.ay *= -1;
-                velocity.dy *= -0.7;
+                velocity.dy *= -1;
                 if (yPos + radius > CANVAS_HEIGHT) {
                     position.y = CANVAS_HEIGHT - radius
                 } else {
@@ -26,8 +25,7 @@ function collisionSystem(world) {
                 }
             }
             if (xPos + radius > CANVAS_WIDTH || xPos - radius < 0) {
-                acceleration.ax *= -1;
-                velocity.dx *= -0.7;
+                velocity.dx *= -1;
                 if (xPos + radius > CANVAS_WIDTH) {
                     position.x = CANVAS_WIDTH - radius
                 } else {
