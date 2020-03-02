@@ -52,3 +52,7 @@ function updateWorld(world) {
 function createWorld(world) {
     return Object.assign(Object.create(null), world);
 }
+
+function maxValue(maxValue, value) {
+    return value > maxValue ? maxValue : value;
+}

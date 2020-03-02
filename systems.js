@@ -127,3 +127,24 @@ function controlsSystem(wolrd) {
         acceleration.ay = force.y;
     }
 }
+
+function followSystem(world) {
+    for (let entity of entityWithComponent('following', 'velocity', 'position', 'acceleration')) {
+        let entityTarget = entity.componentsState['following'].target;
+
+        if (hasComponent(entityTarget, 'position')) {
+            let entityAcceleration = entity.componentsState['acceleration'];
+            let { x: xTarget, y : yTarget } = entityTarget.componentsState['position'];
+            let { x: xEntity, y : yEntity } = entity.componentsState['position'];
+
+            let difX = xTarget - xEntity;
+            let difY = yTarget - yEntity;
+
+
+            entityAcceleration.ax += maxValue(0.5, (difX / 10));
+            entityAcceleration.ay += maxValue(0.5, (difY / 10));
+        }
+        // acceleration.ax += x?;
+        // acceleration.ay += y?;
+    }
+}

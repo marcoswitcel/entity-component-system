@@ -37,3 +37,7 @@ component('position', {
 component('input-control', {
     
 })
+
+component('following', {
+    target: null,
+})
