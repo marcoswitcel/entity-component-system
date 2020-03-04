@@ -15,3 +15,10 @@ function drawCircle(x, y, radius, color) {
     ctx.fillStyle = color;
     ctx.fill();
 }
+
+function drawRect(x, y, width, height, color) {
+    ctx.beginPath();
+    ctx.rect(x - (width/2), y - (height/2), width, height);
+    ctx.fillStyle = color;
+    ctx.fill();
+}

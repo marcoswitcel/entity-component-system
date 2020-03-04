@@ -93,32 +93,50 @@ function renderSystem(world) {
                     entity.componentsState['shape-circle02'].color,
                 )
             }
+            if (hasComponent(entity, 'shape-circle03')) {
+                drawCircle(
+                    entity.componentsState['position'].x,
+                    entity.componentsState['position'].y,
+                    entity.componentsState['shape-circle03'].radius,
+                    entity.componentsState['shape-circle03'].color,
+                )
+            }
+            if (hasComponent(entity, 'vital-status')) {
+                let { x : xPos, y : yPos} = entity.componentsState['position'];
+                let { life, maxLife } = entity.componentsState['vital-status'];
+                let radius = entity.componentsState['shape-circle03'].radius;
+                let width = 75;
+                let height = 5;
+
+                drawRect(xPos - radius, yPos - radius * 1.25, width, height, '#F0F8FF');
+                drawRect(xPos - radius, yPos - radius * 1.25, width * (life/maxLife), height, 'red');
+            }
         }
     }
 }
 
-Input.setKeyIsPressedListenner('u');
-Input.setKeyIsPressedListenner('j');
-Input.setKeyIsPressedListenner('h');
-Input.setKeyIsPressedListenner('k');
+Input.setKeyIsPressedListenner('w');
+Input.setKeyIsPressedListenner('s');
+Input.setKeyIsPressedListenner('a');
+Input.setKeyIsPressedListenner('d');
 
 function controlsSystem(wolrd) {
     for (let entity of entityWithComponent('input-control', 'acceleration')) {
         let acceleration = entity.componentsState['acceleration']
         let force = { x : 0, y : 0 }
 
-        if (Input.areBothKeysPressed('u', 'j')) {
+        if (Input.areBothKeysPressed('w', 's')) {
             // Faz na por hora
-        } else if (Input.isKeyPressed('u')) {
+        } else if (Input.isKeyPressed('w')) {
             force.y = -0.09;
-        } else if (Input.isKeyPressed('j')) {
+        } else if (Input.isKeyPressed('s')) {
             force.y = 0.09;
         }
-        if ( Input.areBothKeysPressed('h', 'k') ) {
+        if ( Input.areBothKeysPressed('a', 'd') ) {
             // Faz na por hora
-        } else if (Input.isKeyPressed('h')) {
+        } else if (Input.isKeyPressed('a')) {
             force.x = -0.09;
-        } else if (Input.isKeyPressed('k')) {
+        } else if (Input.isKeyPressed('d')) {
             force.x = 0.09;
         }
 
@@ -141,10 +159,31 @@ function followSystem(world) {
             let difY = yTarget - yEntity;
 
 
-            entityAcceleration.ax += maxValue(0.5, (difX / 10));
-            entityAcceleration.ay += maxValue(0.5, (difY / 10));
+            entityAcceleration.ax = maxValue(1, (difX / 10));
+            entityAcceleration.ay = maxValue(1, (difY / 10));
         }
-        // acceleration.ax += x?;
-        // acceleration.ay += y?;
+    }
+}
+
+
+function damageSystem(world) {
+    for (let entity of entityWithComponent('following')) {
+        let actualEntityTarget = entity.componentsState['following'].target;
+        if (hasComponent(actualEntityTarget, 'enemy') && hasComponent(actualEntityTarget, 'vital-status')) {
+            let vitalStatus = actualEntityTarget.componentsState['vital-status'];
+
+            vitalStatus.life -= 0.1;
+            console.log(2);
+        }
+    }
+}
+
+function winStateDetector(world) {
+    for (let entity of entityWithComponent('enemy', 'vital-status')) {
+        let { life } = entity.componentsState['vital-status'];
+
+        if (life < 0.2) {
+            alert('end');
+        }
     }
 }

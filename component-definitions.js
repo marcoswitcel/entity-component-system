@@ -3,6 +3,11 @@ component('gravity', {
     y : 0.0001,
 })
 
+component('vital-status', {
+    maxLife: 100,
+    life : 100,
+})
+
 component('renderable', {
     canRender: true
 })
@@ -15,8 +20,14 @@ component('shape-circle', {
 
 component('shape-circle02', {
     type: 'circle',
-    radius: 30,
-    color: 'red',
+    radius: 8,
+    color: 'yellow',
+})
+
+component('shape-circle03', {
+    type: 'circle',
+    radius: 25,
+    color: 'green',
 })
 
 component('velocity', {
@@ -35,6 +46,10 @@ component('position', {
 })
 
 component('input-control', {
+    
+})
+
+component('enemy', {
     
 })
 
