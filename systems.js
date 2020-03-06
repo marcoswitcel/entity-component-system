@@ -36,6 +36,42 @@ function collisionSystem(world) {
     }
 }
 
+function collisionSystem02(world) {
+    // Supõem que tem exatamente uma área
+    const worldAreaEntity = entityWithComponent('world-area')[0];
+
+    const { width : CANVAS_WIDTH, height : CANVAS_HEIGHT } = worldAreaEntity.componentsState['world-area'];
+
+    for (let entity of entityWithComponent('position', 'velocity', 'acceleration')) {
+        if (hasComponent(entity, 'shape-circle') || hasComponent(entity, 'shape-circle02')) {
+            let { x : xPos, y : yPos } = entity.componentsState['position'];
+            // Referência do componente de movimento de uma dada entidade
+            let acceleration = entity.componentsState['acceleration'];
+            let velocity = entity.componentsState['velocity'];
+            let position = entity.componentsState['position'];
+
+            let { radius } = entity.componentsState['shape-circle'] || entity.componentsState['shape-circle02'];
+    
+            if (yPos + radius > CANVAS_HEIGHT || yPos - radius < 0) {
+                velocity.dy *= -1;
+                if (yPos + radius > CANVAS_HEIGHT) {
+                    position.y = CANVAS_HEIGHT - radius
+                } else {
+                    position.y = radius
+                }
+            }
+            if (xPos + radius > CANVAS_WIDTH || xPos - radius < 0) {
+                velocity.dx *= -1;
+                if (xPos + radius > CANVAS_WIDTH) {
+                    position.x = CANVAS_WIDTH - radius
+                } else {
+                    position.x = radius
+                }
+            }
+        }
+    }
+}
+
 function gravitySystem(world) {
     for (let entity of entityWithComponent('gravity', 'acceleration')) {
         let acceleration = entity.componentsState['acceleration'];
@@ -73,8 +109,85 @@ function movementSystem(world) {
     }
 }
 
+function movementSystem02(world) {
+
+    for (let entity of entityWithComponent('position', 'velocity', 'movement')) {
+        let velocity = entity.componentsState['velocity'];
+        let acceleration =  entity.componentsState['acceleration']
+        let position = entity.componentsState['position'];
+        // Computando velocidade
+        if (hasComponent(entity, 'acceleration')) {
+
+            velocity.dx += acceleration.ax
+            velocity.dy += acceleration.ay
+
+            // Limitando velocidade
+            if (Math.abs(velocity.dx) > 10) {
+                velocity.dx = 10 * (velocity.dx / Math.abs(velocity.dx))
+            }
+            if (Math.abs(velocity.dy) > 10) {
+                velocity.dy = 10 * (velocity.dy / Math.abs(velocity.dy))
+            }
+        }
+        // Computando posição
+        velocity.dx *= .99;
+        velocity.dy *= .99;
+        position.x += velocity.dx
+        position.y += velocity.dy
+    }
+}
+
 function renderSystem(world) {
     clearScreen();
+    for (let entity of entityWithComponent('renderable', 'position')) {
+        if (entity.componentsState.renderable.canRender) {
+            if (hasComponent(entity, 'shape-circle')) {
+                drawCircle(
+                    entity.componentsState['position'].x,
+                    entity.componentsState['position'].y,
+                    entity.componentsState['shape-circle'].radius,
+                    entity.componentsState['shape-circle'].color,
+                )
+            }
+            if (hasComponent(entity, 'shape-circle02')) {
+                drawCircle(
+                    entity.componentsState['position'].x,
+                    entity.componentsState['position'].y,
+                    entity.componentsState['shape-circle02'].radius,
+                    entity.componentsState['shape-circle02'].color,
+                )
+            }
+            if (hasComponent(entity, 'shape-circle03')) {
+                drawCircle(
+                    entity.componentsState['position'].x,
+                    entity.componentsState['position'].y,
+                    entity.componentsState['shape-circle03'].radius,
+                    entity.componentsState['shape-circle03'].color,
+                )
+            }
+            if (hasComponent(entity, 'vital-status')) {
+                let { x : xPos, y : yPos} = entity.componentsState['position'];
+                let { life, maxLife } = entity.componentsState['vital-status'];
+                let radius = entity.componentsState['shape-circle03'].radius;
+                let width = 75;
+                let height = 5;
+
+                drawRect(xPos - radius, yPos - radius * 1.25, width, height, '#F0F8FF');
+                drawRect(xPos - radius, yPos - radius * 1.25, width * (life/maxLife), height, 'red');
+            }
+        }
+    }
+}
+
+function renderSystem02(world) {
+    const worldAreaEntity = entityWithComponent('world-area')[0].componentsState['world-area'];
+    const { width , height, background } = worldAreaEntity;
+
+
+    clearScreen();
+
+    drawRect(0,0,width, height, background)
+
     for (let entity of entityWithComponent('renderable', 'position')) {
         if (entity.componentsState.renderable.canRender) {
             if (hasComponent(entity, 'shape-circle')) {
@@ -172,8 +285,9 @@ function damageSystem(world) {
         if (hasComponent(actualEntityTarget, 'enemy') && hasComponent(actualEntityTarget, 'vital-status')) {
             let vitalStatus = actualEntityTarget.componentsState['vital-status'];
 
-            vitalStatus.life -= 0.1;
-            console.log(2);
+            if (vitalStatus.life > 0) {
+                vitalStatus.life -= 0.1;
+            }
         }
     }
 }
@@ -183,7 +297,7 @@ function winStateDetector(world) {
         let { life } = entity.componentsState['vital-status'];
 
         if (life < 0.2) {
-            alert('end');
+            console.log('end');
         }
     }
 }

@@ -3,11 +3,9 @@
 */
 
 
-winStateDetector
-
 const world = createWorld({
     entities: [ ],
-    systems : [ controlsSystem, followSystem, gravitySystem, movementSystem, collisionSystem, damageSystem, winStateDetector, renderSystem ],
+    systems : [ controlsSystem, followSystem, gravitySystem, movementSystem02, collisionSystem02, damageSystem, winStateDetector, renderSystem02 ],
 });
 
 var isRunning = true;
@@ -23,13 +21,19 @@ const newEntity01 = entity({
         'acceleration',
         'input-control',
         // 'gravity',
-        'shape-circle'
+        'shape-circle',
+        'movement',
     ]
 })
-newEntity01.componentsState.position.x = 100
-newEntity01.componentsState.position.y = 100
+newEntity01.componentsState.position.x = 450
+newEntity01.componentsState.position.y = 300
 
 queue.entitiesToInsert.push(newEntity01);
+
+const worldArea = entity({
+    components : [ 'world-area' ]
+})
+queue.entitiesToInsert.push(worldArea);
 
 const enemyEntity = entity({
     components : [
@@ -40,10 +44,11 @@ const enemyEntity = entity({
         'shape-circle03',
         'vital-status',
         'enemy',
+        'movement',
     ]
 })
-enemyEntity.componentsState.position.x = 300
-enemyEntity.componentsState.position.y = 300
+enemyEntity.componentsState.position.x = 100
+enemyEntity.componentsState.position.y = 100
 
 queue.entitiesToInsert.push(enemyEntity);
 
@@ -83,7 +88,7 @@ canvasElement.addEventListener('click', function(event) {
     
         // if (once) return;
         // once = true;
-        const components = ['velocity', 'position', 'renderable', 'following', 'acceleration', 'shape-circle02' ];
+        const components = ['velocity', 'position', 'renderable', 'following', 'acceleration', 'movement', 'shape-circle02' ];
         if (1 || Math.round(Math.random())) {
             components.push('gravity');
         }

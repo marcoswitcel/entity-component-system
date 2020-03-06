@@ -8,6 +8,16 @@ component('vital-status', {
     life : 100,
 })
 
+component('movement', {
+
+})
+
+component('world-area', {
+    width: 900 / 2,
+    height: 600 / 2,
+    background: '#F0FFFF',
+});
+
 component('renderable', {
     canRender: true
 })
