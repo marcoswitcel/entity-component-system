@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            background-color: #333;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            background-color: white;
+
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="900" height="600"></canvas>
+    <script src="input.js"></script>
+    <script src="ecs-library.js"></script>
+    <script src="event.js"></script>
+    <script src="render.js"></script>
+    <script src="component-definitions.js"></script>
+    <script src="systems.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>

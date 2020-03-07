@@ -13,13 +13,14 @@ component('movement', {
 })
 
 component('world-area', {
-    width: 900 / 2,
-    height: 600 / 2,
-    background: '#F0FFFF',
+    width: 900 *2,
+    height: 600 *2,
+    background: '#7FFFD4',
 });
 
 component('renderable', {
-    canRender: true
+    renderable: true,
+    canRender: true,
 })
 
 component('shape-circle', {

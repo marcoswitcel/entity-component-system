@@ -3,40 +3,6 @@
  */
 
 function collisionSystem(world) {
-    const CANVAS_WIDTH = 900;
-    const CANVAS_HEIGHT = 600;
-
-    for (let entity of entityWithComponent('position', 'velocity', 'acceleration')) {
-        if (hasComponent(entity, 'shape-circle') || hasComponent(entity, 'shape-circle02')) {
-            let { x : xPos, y : yPos } = entity.componentsState['position'];
-            // Referência do componente de movimento de uma dada entidade
-            let acceleration = entity.componentsState['acceleration'];
-            let velocity = entity.componentsState['velocity'];
-            let position = entity.componentsState['position'];
-
-            let { radius } = entity.componentsState['shape-circle'] || entity.componentsState['shape-circle02'];
-    
-            if (yPos + radius > CANVAS_HEIGHT || yPos - radius < 0) {
-                velocity.dy *= -1;
-                if (yPos + radius > CANVAS_HEIGHT) {
-                    position.y = CANVAS_HEIGHT - radius
-                } else {
-                    position.y = radius
-                }
-            }
-            if (xPos + radius > CANVAS_WIDTH || xPos - radius < 0) {
-                velocity.dx *= -1;
-                if (xPos + radius > CANVAS_WIDTH) {
-                    position.x = CANVAS_WIDTH - radius
-                } else {
-                    position.x = radius
-                }
-            }
-        }
-    }
-}
-
-function collisionSystem02(world) {
     // Supõem que tem exatamente uma área
     const worldAreaEntity = entityWithComponent('world-area')[0];
 
@@ -82,34 +48,8 @@ function gravitySystem(world) {
     }
 }
 
+
 function movementSystem(world) {
-    for (let entity of entityWithComponent('position', 'velocity')) {
-        let velocity = entity.componentsState['velocity'];
-        let acceleration =  entity.componentsState['acceleration']
-        let position = entity.componentsState['position'];
-        // Computando velocidade
-        if (hasComponent(entity, 'acceleration')) {
-
-            velocity.dx += acceleration.ax
-            velocity.dy += acceleration.ay
-
-            // Limitando velocidade
-            if (Math.abs(velocity.dx) > 10) {
-                velocity.dx = 10 * (velocity.dx / Math.abs(velocity.dx))
-            }
-            if (Math.abs(velocity.dy) > 10) {
-                velocity.dy = 10 * (velocity.dy / Math.abs(velocity.dy))
-            }
-        }
-        // Computando posição
-        velocity.dx *= .99;
-        velocity.dy *= .99;
-        position.x += velocity.dx
-        position.y += velocity.dy
-    }
-}
-
-function movementSystem02(world) {
 
     for (let entity of entityWithComponent('position', 'velocity', 'movement')) {
         let velocity = entity.componentsState['velocity'];
@@ -138,86 +78,60 @@ function movementSystem02(world) {
 }
 
 function renderSystem(world) {
-    clearScreen();
-    for (let entity of entityWithComponent('renderable', 'position')) {
-        if (entity.componentsState.renderable.canRender) {
-            if (hasComponent(entity, 'shape-circle')) {
-                drawCircle(
-                    entity.componentsState['position'].x,
-                    entity.componentsState['position'].y,
-                    entity.componentsState['shape-circle'].radius,
-                    entity.componentsState['shape-circle'].color,
-                )
-            }
-            if (hasComponent(entity, 'shape-circle02')) {
-                drawCircle(
-                    entity.componentsState['position'].x,
-                    entity.componentsState['position'].y,
-                    entity.componentsState['shape-circle02'].radius,
-                    entity.componentsState['shape-circle02'].color,
-                )
-            }
-            if (hasComponent(entity, 'shape-circle03')) {
-                drawCircle(
-                    entity.componentsState['position'].x,
-                    entity.componentsState['position'].y,
-                    entity.componentsState['shape-circle03'].radius,
-                    entity.componentsState['shape-circle03'].color,
-                )
-            }
-            if (hasComponent(entity, 'vital-status')) {
-                let { x : xPos, y : yPos} = entity.componentsState['position'];
-                let { life, maxLife } = entity.componentsState['vital-status'];
-                let radius = entity.componentsState['shape-circle03'].radius;
-                let width = 75;
-                let height = 5;
-
-                drawRect(xPos - radius, yPos - radius * 1.25, width, height, '#F0F8FF');
-                drawRect(xPos - radius, yPos - radius * 1.25, width * (life/maxLife), height, 'red');
-            }
-        }
-    }
-}
-
-function renderSystem02(world) {
     const worldAreaEntity = entityWithComponent('world-area')[0].componentsState['world-area'];
+    const playerEntity = entityWithComponent('input-control')[0];
+    const { x : playerPosX, y : playerPosY } = playerEntity.componentsState.position;
     const { width , height, background } = worldAreaEntity;
-
+    const offsetX = window.width / 2;
+    const offsetY  =window.height / 2;
 
     clearScreen();
 
-    drawRect(0,0,width, height, background)
+    drawRect(offsetX + (width/2) - playerPosX,offsetY + (height/2) - playerPosY,width, height, background)
 
-    for (let entity of entityWithComponent('renderable', 'position')) {
-        if (entity.componentsState.renderable.canRender) {
-            if (hasComponent(entity, 'shape-circle')) {
+    const entitiesInCameraView = entityWithComponent('renderable', 'position')
+        .filter(entity => {
+            const { x, y } = entity.componentsState.position;
+
+            return Math.abs(playerPosX - x) < offsetX && Math.abs(playerPosY - y) < offsetY;
+        })
+
+    for (let entity of entitiesInCameraView) {
+        let entityComponentsState = entity.componentsState;
+        if (
+            entityComponentsState.renderable.renderable &&
+            entityComponentsState.renderable.canRender
+        ) {
+
+            let shape01 = hasComponent(entity, 'shape-circle');
+            let shape02 = hasComponent(entity, 'shape-circle02');
+            let shape03 = hasComponent(entity, 'shape-circle03');
+            let shapeComponentName = shape01 ? 
+                'shape-circle' : shape02 ?
+                'shape-circle02' : 'shape-circle03';
+
+            if (hasComponent(entity, 'input-control')) {
                 drawCircle(
-                    entity.componentsState['position'].x,
-                    entity.componentsState['position'].y,
-                    entity.componentsState['shape-circle'].radius,
-                    entity.componentsState['shape-circle'].color,
+                    offsetX,
+                    offsetY,
+                    entityComponentsState[shapeComponentName].radius,
+                    entityComponentsState[shapeComponentName].color,
+                )
+            } else {    
+                drawCircle(
+                    offsetX + (entityComponentsState['position'].x - playerPosX),
+                    offsetY + (entityComponentsState['position'].y - playerPosY),
+                    entityComponentsState[shapeComponentName].radius,
+                    entityComponentsState[shapeComponentName].color,
                 )
             }
-            if (hasComponent(entity, 'shape-circle02')) {
-                drawCircle(
-                    entity.componentsState['position'].x,
-                    entity.componentsState['position'].y,
-                    entity.componentsState['shape-circle02'].radius,
-                    entity.componentsState['shape-circle02'].color,
-                )
-            }
-            if (hasComponent(entity, 'shape-circle03')) {
-                drawCircle(
-                    entity.componentsState['position'].x,
-                    entity.componentsState['position'].y,
-                    entity.componentsState['shape-circle03'].radius,
-                    entity.componentsState['shape-circle03'].color,
-                )
-            }
-            if (hasComponent(entity, 'vital-status')) {
-                let { x : xPos, y : yPos} = entity.componentsState['position'];
-                let { life, maxLife } = entity.componentsState['vital-status'];
-                let radius = entity.componentsState['shape-circle03'].radius;
+            
+
+            // Pinta a barra de vida
+            if (hasComponent(entity, 'vital-status') && false) {
+                let { x : xPos, y : yPos} = entityComponentsState['position'];
+                let { life, maxLife } = entityComponentsState['vital-status'];
+                let radius = entityComponentsState[shapeComponentName].radius;
                 let width = 75;
                 let height = 5;
 
