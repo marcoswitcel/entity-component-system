@@ -83,7 +83,7 @@ function renderSystem(world) {
     const { x : playerPosX, y : playerPosY } = playerEntity.componentsState.position;
     const { width , height, background } = worldAreaEntity;
     const offsetX = window.width / 2;
-    const offsetY  =window.height / 2;
+    const offsetY = window.height / 2;
 
     clearScreen();
 
@@ -105,7 +105,7 @@ function renderSystem(world) {
 
             let shape01 = hasComponent(entity, 'shape-circle');
             let shape02 = hasComponent(entity, 'shape-circle02');
-            let shape03 = hasComponent(entity, 'shape-circle03');
+            //let shape03 = hasComponent(entity, 'shape-circle03');
             let shapeComponentName = shape01 ? 
                 'shape-circle' : shape02 ?
                 'shape-circle02' : 'shape-circle03';
@@ -116,28 +116,35 @@ function renderSystem(world) {
                     offsetY,
                     entityComponentsState[shapeComponentName].radius,
                     entityComponentsState[shapeComponentName].color,
-                )
+                );
+                // Pinta a barra de vida
+                if (hasComponent(entity, 'vital-status')) {
+                    let { life, maxLife } = entityComponentsState['vital-status'];
+                    let radius = entityComponentsState[shapeComponentName].radius;
+                    let width = 75;
+                    let height = 5;
+
+                    drawRect(offsetX, offsetY - radius * 1.5, width, height, '#F0F8FF');
+                    drawRect(offsetX, offsetY - radius * 1.5, width * (life/maxLife), height, 'red');
+                }
             } else {    
                 drawCircle(
                     offsetX + (entityComponentsState['position'].x - playerPosX),
                     offsetY + (entityComponentsState['position'].y - playerPosY),
                     entityComponentsState[shapeComponentName].radius,
                     entityComponentsState[shapeComponentName].color,
-                )
-            }
-            
+                );
+                // Pinta a barra de vida
+                if (hasComponent(entity, 'vital-status')) {
+                    let { life, maxLife } = entityComponentsState['vital-status'];
+                    let radius = entityComponentsState[shapeComponentName].radius;
+                    let width = 75;
+                    let height = 5;
 
-            // Pinta a barra de vida
-            if (hasComponent(entity, 'vital-status') && false) {
-                let { x : xPos, y : yPos} = entityComponentsState['position'];
-                let { life, maxLife } = entityComponentsState['vital-status'];
-                let radius = entityComponentsState[shapeComponentName].radius;
-                let width = 75;
-                let height = 5;
-
-                drawRect(xPos - radius, yPos - radius * 1.25, width, height, '#F0F8FF');
-                drawRect(xPos - radius, yPos - radius * 1.25, width * (life/maxLife), height, 'red');
-            }
+                    drawRect(offsetX + (entityComponentsState['position'].x - playerPosX), offsetY + (entityComponentsState['position'].y - playerPosY) - radius * 1.5, width, height, '#F0F8FF');
+                    drawRect(offsetX + (entityComponentsState['position'].x - playerPosX), offsetY + (entityComponentsState['position'].y - playerPosY) - radius * 1.5, width * (life/maxLife), height, 'red');
+                }
+            }          
         }
     }
 }
