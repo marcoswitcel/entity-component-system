@@ -7,7 +7,7 @@ const world = createWorld({
     entities: [ ],
     constraint: [
         function(world) {
-            return [ !!entityWithComponent('input-control')[0] , 'o jogador está presente', 'o jogador e stá ausente'];
+            return [ !!entityWithComponent('input-control')[0] , 'o jogador está presente', 'o jogador está ausente'];
         },
         function(world) {
             return [ !!entityWithComponent('world-area')[0], 'world area presente', 'a entidade que delimita a área está ausente'];
