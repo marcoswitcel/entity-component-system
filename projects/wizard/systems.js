@@ -215,10 +215,11 @@ function damageSystem(world) {
 
 function winStateDetector(world) {
     for (let entity of entityWithComponent('enemy', 'vital-status')) {
-        let { life } = entity.componentsState['vital-status'];
+        let vitalStatus = entity.componentsState['vital-status'];
 
-        if (life < 0.2) {
-            console.log('end');
+        if (vitalStatus.life < 0.2) {
+            alert('Status vital zerado');
+            vitalStatus.life = vitalStatus.maxLife;
         }
     }
 }

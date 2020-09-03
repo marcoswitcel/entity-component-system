@@ -21,24 +21,6 @@ const world = createWorld({
 
 var isRunning = true;
 
-const newEntity01 = entity({
-    components : [
-        'velocity',
-        'position',
-        'renderable',
-        'acceleration',
-        'input-control',
-        // 'gravity',
-        'shape-circle',
-        'movement',
-        'vital-status',
-    ]
-})
-newEntity01.componentsState.position.x = 450/2
-newEntity01.componentsState.position.y = 300/2
-
-world.queue.entitiesToInsert.push(newEntity01);
-
 const worldArea = entity({
     components : [ 'world-area' ]
 })
@@ -60,6 +42,24 @@ enemyEntity.componentsState.position.x = 100
 enemyEntity.componentsState.position.y = 100
 
 world.queue.entitiesToInsert.push(enemyEntity);
+
+const newEntity01 = entity({
+    components : [
+        'velocity',
+        'position',
+        'renderable',
+        'acceleration',
+        'input-control',
+        // 'gravity',
+        'shape-circle',
+        'movement',
+        'vital-status',
+    ]
+})
+newEntity01.componentsState.position.x = 450/2
+newEntity01.componentsState.position.y = 300/2
+
+world.queue.entitiesToInsert.push(newEntity01);
 
 function loop(world) {
     for (let entity of world.queue.entitiesToInsert) {
@@ -116,5 +116,5 @@ canvasElement.addEventListener('click', function(event) {
     
         world.queue.entitiesToInsert.push(entityInstance)
         followers++;
-    }, 500);
+    }, 800);
 }
