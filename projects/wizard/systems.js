@@ -239,7 +239,7 @@ function enemyAI(world) {
         let { x : xEnemy, y : yEnemy } = entity.componentsState['position'];
         let entityAcceleration = entity.componentsState['acceleration'];
 
-        entityAcceleration.ax = (playerPosition.x - xEnemy)/10000;
-        entityAcceleration.ay = (playerPosition.y - yEnemy)/10000;
+        entityAcceleration.ax = (playerPosition.x - xEnemy)/(100 * 60);
+        entityAcceleration.ay = (playerPosition.y - yEnemy)/(100 * 60);
     }
 }

@@ -28,39 +28,25 @@ const worldArea = entity({
 })
 world.queue.entitiesToInsert.push(worldArea);
 
-const enemyEntity = entity({
-    components : [
-        'velocity',
-        'position',
-        'renderable',
-        'acceleration',
-        'shape-circle03',
-        'vital-status',
-        'enemy',
-        'movement',
-    ]
-})
-enemyEntity.componentsState.position.x = 100;
-enemyEntity.componentsState.position.y = 100;
+for (let i = 0; i < 10; i++) {
+    let enemyEntity = entity({
+        components : [
+            'velocity',
+            'position',
+            'renderable',
+            'acceleration',
+            'shape-circle03',
+            'vital-status',
+            'enemy',
+            'movement',
+        ]
+    })
+    enemyEntity.componentsState.position.x = 450 + Math.floor(Math.random() * 900 - 450)
+    enemyEntity.componentsState.position.y = 300 + Math.floor(Math.random() * 600 - 300)
+    
+    world.queue.entitiesToInsert.push(enemyEntity);
+}
 
-world.queue.entitiesToInsert.push(enemyEntity);
-
-const enemyEntity2 = entity({
-    components : [
-        'velocity',
-        'position',
-        'renderable',
-        'acceleration',
-        'shape-circle03',
-        'vital-status',
-        'enemy',
-        'movement',
-    ]
-})
-enemyEntity2.componentsState.position.x = 200;
-enemyEntity2.componentsState.position.y = 100;
-
-world.queue.entitiesToInsert.push(enemyEntity2);
 
 const newEntity01 = entity({
     components : [
