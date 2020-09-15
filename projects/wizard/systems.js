@@ -9,14 +9,14 @@ function collisionSystem(world) {
     const { width : CANVAS_WIDTH, height : CANVAS_HEIGHT } = worldAreaEntity.componentsState['world-area'];
 
     for (let entity of entityWithComponent('position', 'velocity', 'acceleration')) {
-        if (hasComponent(entity, 'shape-circle') || hasComponent(entity, 'shape-circle02')) {
+        if (hasComponent(entity, 'shape-circle') || hasComponent(entity, 'shape-circle02') || hasComponent(entity, 'shape-circle03')) {
             let { x : xPos, y : yPos } = entity.componentsState['position'];
             // Referência do componente de movimento de uma dada entidade
             let acceleration = entity.componentsState['acceleration'];
             let velocity = entity.componentsState['velocity'];
             let position = entity.componentsState['position'];
 
-            let { radius } = entity.componentsState['shape-circle'] || entity.componentsState['shape-circle02'];
+            let { radius } = entity.componentsState['shape-circle'] || entity.componentsState['shape-circle02'] || entity.componentsState['shape-circle03'];
     
             if (yPos + radius > CANVAS_HEIGHT || yPos - radius < 0) {
                 velocity.dy *= -1;
@@ -221,5 +221,19 @@ function winStateDetector(world) {
             alert('Status vital zerado');
             vitalStatus.life = vitalStatus.maxLife;
         }
+    }
+}
+
+function enemyAI(world) {
+    const player = entityWithComponent('input-control', 'position')[0];
+    const playerPosition = player.componentsState['position'];
+
+
+    for (let entity of entityWithComponent('enemy', 'vital-status', 'position', 'velocity', 'movement', 'acceleration')) {
+        let { x : xEnemy, y : yEnemy } = entity.componentsState['position'];
+        let entityAcceleration = entity.componentsState['acceleration'];
+
+        entityAcceleration.ax = (playerPosition.x - xEnemy)/10000;
+        entityAcceleration.ay = (playerPosition.y - yEnemy)/10000;
     }
 }

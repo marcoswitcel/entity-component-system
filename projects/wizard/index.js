@@ -13,7 +13,7 @@ const world = createWorld({
             return [ !!entityWithComponent('world-area')[0], 'world area presente', 'a entidade que delimita a área está ausente'];
         }
     ],
-    systems : [ controlsSystem, followSystem, gravitySystem, movementSystem, collisionSystem, damageSystem, winStateDetector, renderSystem ],
+    systems : [ controlsSystem, enemyAI, followSystem, gravitySystem, movementSystem, collisionSystem, damageSystem, winStateDetector, renderSystem ],
     queue : {
         entitiesToInsert : []
     }
@@ -38,10 +38,27 @@ const enemyEntity = entity({
         'movement',
     ]
 })
-enemyEntity.componentsState.position.x = 100
-enemyEntity.componentsState.position.y = 100
+enemyEntity.componentsState.position.x = 100;
+enemyEntity.componentsState.position.y = 100;
 
 world.queue.entitiesToInsert.push(enemyEntity);
+
+const enemyEntity2 = entity({
+    components : [
+        'velocity',
+        'position',
+        'renderable',
+        'acceleration',
+        'shape-circle03',
+        'vital-status',
+        'enemy',
+        'movement',
+    ]
+})
+enemyEntity2.componentsState.position.x = 200;
+enemyEntity2.componentsState.position.y = 100;
+
+world.queue.entitiesToInsert.push(enemyEntity2);
 
 const newEntity01 = entity({
     components : [
