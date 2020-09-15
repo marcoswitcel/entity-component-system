@@ -15,7 +15,8 @@ const world = createWorld({
     ],
     systems : [ controlsSystem, enemyAI, followSystem, gravitySystem, movementSystem, collisionSystem, damageSystem, winStateDetector, renderSystem ],
     queue : {
-        entitiesToInsert : []
+        entitiesToInsert : [],
+        entitiesToRemove : [],
     }
 });
 
@@ -82,8 +83,11 @@ function loop(world) {
     for (let entity of world.queue.entitiesToInsert) {
         world.entities.push(entity)
     }
-
     world.queue.entitiesToInsert = [];
+
+    world.entities = world.entities.filter((x) => !world.queue.entitiesToRemove.includes(x));
+    world.queue.entitiesToRemove = [];
+
 
     isRunning && updateWorld(world);
     // setTimeout(() => loop(world), 1000/60);
@@ -94,15 +98,21 @@ startLoop(world, loop);
 
 
 canvasElement.addEventListener('click', function(event) {
-    for (let entity of entityWithComponent('following', 'velocity', 'position', 'acceleration')) {
-        let actualEntityTarget = entity.componentsState['following'].target;
-        
-        if (actualEntityTarget !== enemyEntity) {
-            entity.componentsState['following'].target = enemyEntity;
-            setTimeout(function() {
-                entity.componentsState['following'].target = actualEntityTarget;
-            }, 2000);
-            break;
+    const enemies = entityWithComponent('enemy');
+    const enemyEntity = enemies[0];
+
+    // Se houver pelo menos un inimigo no mapa essa variável terá a referência do mesmo
+    if (enemyEntity) {
+        for (let entity of entityWithComponent('following', 'velocity', 'position', 'acceleration')) {
+            let actualEntityTarget = entity.componentsState['following'].target;
+            
+            if (actualEntityTarget !== enemyEntity) {
+                entity.componentsState['following'].target = enemyEntity;
+                setTimeout(function() {
+                    entity.componentsState['following'].target = actualEntityTarget;
+                }, 2000);
+                break;
+            }
         }
     }
 });

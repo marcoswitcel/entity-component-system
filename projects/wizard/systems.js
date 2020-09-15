@@ -218,9 +218,15 @@ function winStateDetector(world) {
         let vitalStatus = entity.componentsState['vital-status'];
 
         if (vitalStatus.life < 0.2) {
-            alert('Status vital zerado');
-            vitalStatus.life = vitalStatus.maxLife;
+            // vitalStatus.life = vitalStatus.maxLife;
+            world.queue.entitiesToRemove.push(entity);
         }
+    }
+    
+    if (!entityWithComponent('enemy').length && window.isRunning) {
+        window.isRunning = false;
+        window.alert('Reiniciando!');
+        window.location.reload();
     }
 }
 
