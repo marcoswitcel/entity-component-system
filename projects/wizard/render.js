@@ -22,3 +22,7 @@ function drawRect(x, y, width, height, color) {
     ctx.fillStyle = color;
     ctx.fill();
 }
+
+function drawTexture(texture, x, y, width, height, color) {
+    ctx.drawImage(texture, x - (width/2), y - (height/2), width, height);
+}

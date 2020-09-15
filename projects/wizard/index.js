@@ -1,7 +1,8 @@
 /**
 * Start da simulação
 */
-
+const floorTexture = new Image();
+floorTexture.src = '461223110.jpg';
 
 const world = createWorld({
     entities: [ ],

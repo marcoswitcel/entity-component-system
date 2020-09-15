@@ -87,7 +87,7 @@ function renderSystem(world) {
 
     clearScreen();
 
-    drawRect(offsetX + (width/2) - playerPosX,offsetY + (height/2) - playerPosY,width, height, background)
+    drawTexture(floorTexture, offsetX + (width/2) - playerPosX,offsetY + (height/2) - playerPosY,width, height, background)
 
     const entitiesInCameraView = entityWithComponent('renderable', 'position')
         .filter(entity => {
