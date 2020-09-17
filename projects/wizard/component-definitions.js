@@ -61,7 +61,7 @@ component('input-control', {
 })
 
 component('enemy', {
-    
+    velocityFactor: 100 * 60,
 })
 
 component('following', {

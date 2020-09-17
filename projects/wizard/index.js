@@ -43,6 +43,8 @@ for (let i = 0; i < 10; i++) {
     })
     enemyEntity.componentsState.position.x = (CANVAS_WIDTH/2) + Math.floor(Math.random() * (CANVAS_WIDTH) - (CANVAS_WIDTH/2))
     enemyEntity.componentsState.position.y = (CANVAS_HEIGHT/2) + Math.floor(Math.random() * (CANVAS_HEIGHT) - (CANVAS_HEIGHT/2))
+
+    enemyEntity.componentsState.enemy.velocityFactor = (Math.random() * 500) * 60
     
     world.queue.entitiesToInsert.push(enemyEntity);
 }

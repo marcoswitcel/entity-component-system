@@ -238,8 +238,9 @@ function enemyAI(world) {
     for (let entity of entityWithComponent('enemy', 'vital-status', 'position', 'velocity', 'movement', 'acceleration')) {
         let { x : xEnemy, y : yEnemy } = entity.componentsState['position'];
         let entityAcceleration = entity.componentsState['acceleration'];
+        let entityVelocityFactor = entity.componentsState['enemy'].velocityFactor;
 
-        entityAcceleration.ax = (playerPosition.x - xEnemy)/(100 * 60);
-        entityAcceleration.ay = (playerPosition.y - yEnemy)/(100 * 60);
+        entityAcceleration.ax = (playerPosition.x - xEnemy)/entityVelocityFactor;
+        entityAcceleration.ay = (playerPosition.y - yEnemy)/entityVelocityFactor;
     }
 }
