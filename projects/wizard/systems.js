@@ -82,8 +82,8 @@ function renderSystem(world) {
     const playerEntity = entityWithComponent('input-control')[0];
     const { x : playerPosX, y : playerPosY } = playerEntity.componentsState.position;
     const { width , height, background } = worldAreaEntity;
-    const offsetX = window.width / 2;
-    const offsetY = window.height / 2;
+    const offsetX = window.CANVAS_WIDTH / 2;
+    const offsetY = window.CANVAS_HEIGHT / 2;
 
     clearScreen();
 

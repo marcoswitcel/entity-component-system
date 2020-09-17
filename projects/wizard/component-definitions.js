@@ -13,8 +13,8 @@ component('movement', {
 })
 
 component('world-area', {
-    width: 900 *2,
-    height: 600 *2,
+    width: CANVAS_WIDTH *2,
+    height: CANVAS_HEIGHT *2,
     background: '#7FFFD4',
 });
 

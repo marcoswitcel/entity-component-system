@@ -1,10 +1,14 @@
 var canvasElement = document.getElementById('canvas');
 const ctx = canvasElement.getContext('2d');
-var { width, height } = canvasElement;
+
+canvasElement.width = window.innerWidth;
+canvasElement.height = window.innerHeight;
+
+var { width : CANVAS_WIDTH, height : CANVAS_HEIGHT } = canvasElement;
 
 function clearScreen() {
     ctx.beginPath();
-    ctx.rect(0, 0, width, height);
+    ctx.rect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     ctx.fillStyle = "white";
     ctx.fill();
 }

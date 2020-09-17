@@ -41,8 +41,8 @@ for (let i = 0; i < 10; i++) {
             'movement',
         ]
     })
-    enemyEntity.componentsState.position.x = 450 + Math.floor(Math.random() * 900 - 450)
-    enemyEntity.componentsState.position.y = 300 + Math.floor(Math.random() * 600 - 300)
+    enemyEntity.componentsState.position.x = (CANVAS_WIDTH/2) + Math.floor(Math.random() * (CANVAS_WIDTH) - (CANVAS_WIDTH/2))
+    enemyEntity.componentsState.position.y = (CANVAS_HEIGHT/2) + Math.floor(Math.random() * (CANVAS_HEIGHT) - (CANVAS_HEIGHT/2))
     
     world.queue.entitiesToInsert.push(enemyEntity);
 }
@@ -61,8 +61,8 @@ const newEntity01 = entity({
         'vital-status',
     ]
 })
-newEntity01.componentsState.position.x = 450/2
-newEntity01.componentsState.position.y = 300/2
+newEntity01.componentsState.position.x = (CANVAS_WIDTH/2)/2
+newEntity01.componentsState.position.y = (CANVAS_HEIGHT/2)/2
 
 world.queue.entitiesToInsert.push(newEntity01);
 
@@ -118,8 +118,8 @@ canvasElement.addEventListener('click', function(event) {
         }
         const entityInstance = entity({ components : components });
     
-        entityInstance.componentsState.position.x = 450 + Math.floor(Math.random() * 900 - 450)
-        entityInstance.componentsState.position.y = 300 + Math.floor(Math.random() * 600 - 300)
+        entityInstance.componentsState.position.x = (CANVAS_WIDTH/2) + Math.floor(Math.random() * (CANVAS_WIDTH) - (CANVAS_WIDTH/2))
+        entityInstance.componentsState.position.y = (CANVAS_HEIGHT) + Math.floor(Math.random() * (CANVAS_HEIGHT) - (CANVAS_HEIGHT))
         // Velocity
         entityInstance.componentsState.velocity.dy = Math.floor(Math.random() * 10 - 5)
         entityInstance.componentsState.velocity.dx = Math.floor(Math.random() * 10 - 5)
