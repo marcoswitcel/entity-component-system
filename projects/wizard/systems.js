@@ -91,6 +91,8 @@ function renderSystem(world) {
 
     const entitiesInCameraView = entityWithComponent('renderable', 'position')
         .filter(entity => {
+            // @TODO seria interessante considerar o raio do elemento sendo desenhado
+            // claro que talvez nem todos o elementos terão raio, porém por hora tem
             const { x, y } = entity.componentsState.position;
 
             return Math.abs(playerPosX - x) < offsetX && Math.abs(playerPosY - y) < offsetY;

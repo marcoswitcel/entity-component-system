@@ -85,7 +85,8 @@ function loop(world) {
 
 startLoop(world, loop);
 
-
+// @TODO por algum motivo as bolinhas não estão voltando para o jogar sempre,
+// em alguns momentos elas apontam para um entidade fantasma
 canvasElement.addEventListener('click', function(event) {
     const enemies = entityWithComponent('enemy');
     const enemyEntity = enemies[0];
